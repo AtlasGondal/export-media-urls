@@ -1,7 +1,7 @@
-[![export-media-urls](https://socialify.git.ci/AtlasGondal/export-media-urls/image?description=1&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fdevicons%2Fdevicon%2Fmaster%2Ficons%2Fwordpress%2Fwordpress-original.svg&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Light)][plugin-url]
+[![export-media-urls](https://socialify.git.ci/AtlasGondal/export-media-urls/image?description=1&descriptionEditable=extract%20media%20URLs%20of%20wordpress%20website&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fdevicons%2Fdevicon%2Fmaster%2Ficons%2Fwordpress%2Fwordpress-original.svg&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Light)][plugin-url]
 
 # Export Media URLs
-extract media URLs of your wordpress website
+extract media URLs of wordpress website
 
 ## Description
 
