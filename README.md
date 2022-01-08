@@ -32,7 +32,7 @@ If you discover any bug then [report here][contact], I’ll try to fix as soon a
 
 ## How to install?
 - [wordpress repository][plugin-url] (standard wordpress plugin installation method)
-- download [latest release][latest-release] and manually install via ftp/cpanel
+- download latest release from [github][github-release] / [wordpress][plugin-url] and manually upload via ftp/cpanel
 
 **\* Screenshots and further guide about plugin installation can be found on [wordpress repository][plugin-url]**
 
@@ -54,4 +54,4 @@ If you discover any bug then [report here][contact], I’ll try to fix as soon a
 [linkedin]: https://www.linkedin.com/in/AtlasGondal/
 [plugin-url]: https://wordpress.org/plugins/export-media-urls/
 [rating-url]: https://wordpress.org/support/plugin/export-media-urls/reviews/?filter=5#new-post
-[latest-release]: https://github.com/AtlasGondal/export-media-urls/releases
+[github-release]: https://github.com/AtlasGondal/export-media-urls/releases
