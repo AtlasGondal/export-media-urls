@@ -48,8 +48,8 @@ class ExportMediaURLsAdmin {
     public function add_plugin_page() {
 
         add_management_page(
-            'Export Media URLs',
-            'Export Media URLs',
+            _x( 'Export Media URLs', 'Page Title', 'export-media-urls' ),
+            _x( 'Export Media URLs', 'Menu Title', 'export-media-urls' ),
             'manage_options',
             'extract-media-urls-settings',
             array( $this, 'emu_settings_page')
@@ -61,7 +61,7 @@ class ExportMediaURLsAdmin {
 
         if ( $this->is_my_plugin_screen() ) {
 
-            $footer_text = 'Enjoyed <strong>Export Media URLs</strong>? Please leave us a <a href="https://wordpress.org/support/plugin/export-media-urls/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating. We really appreciate your support! ';
+            $footer_text = __( 'Enjoyed <strong>Export Media URLs</strong>? Please leave us a <a href="https://wordpress.org/support/plugin/export-media-urls/reviews/?filter=5#new-post" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> rating. We really appreciate your support!', 'export-media-urls' );
 
         }
 
@@ -70,7 +70,7 @@ class ExportMediaURLsAdmin {
 
     public function emu_settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'export-media-urls' ) );
         }
 
         $user_ids = array();
@@ -89,7 +89,7 @@ class ExportMediaURLsAdmin {
 
         <div class="wrap">
 
-            <h2 align="center">Export Media URLs</h2>
+            <h2 align="center"><?php echo esc_html_x( 'Export Media URLs', 'Setting Page Title', 'export-media-urls' ); ?></h2>
 
             <div class="EMU-Wrapper">
                 <div class="EMU-Main-Container postbox">
@@ -101,19 +101,15 @@ class ExportMediaURLsAdmin {
 
                                 <tr>
 
-                                    <th><label>Additional Data:</label></th>
+                                    <th><label><?php esc_html_e( 'Additional Data:', 'export-media-urls' ); ?></label></th>
 
                                     <td>
 
-                                        <label><input type="checkbox" name="additional-data[]" value="id"/>
-                                            Media ID</label><br/>
-                                        <label><input type="checkbox" name="additional-data[]" value="title"/>
-                                            Media Title</label><br/>
-                                        <label><input type="checkbox" name="additional-data[]" value="url" checked />
-                                            Media URL</label><br/>
-                                        <label><input type="checkbox" name="additional-data[]" value="date"/> Date Uploaded</label><br/>
-
-                                        <label><input type="checkbox" name="additional-data[]" value="type"/> Media Type</label><br/>
+                                        <label><input type="checkbox" name="additional-data[]" value="id"/><?php esc_html_e( 'Media ID', 'export-media-urls' ); ?></label><br/>
+                                        <label><input type="checkbox" name="additional-data[]" value="title"/><?php esc_html_e( 'Media Title', 'export-media-urls' ); ?></label><br/>
+                                        <label><input type="checkbox" name="additional-data[]" value="url" checked /><?php esc_html_e( 'Media URL', 'export-media-urls' ); ?></label><br/>
+                                        <label><input type="checkbox" name="additional-data[]" value="date"/><?php esc_html_e( 'Date Uploaded', 'export-media-urls' ); ?></label><br/>
+                                        <label><input type="checkbox" name="additional-data[]" value="type"/><?php esc_html_e( 'Media Type', 'export-media-urls' ); ?></label><br/>
 
                                     </td>
 
@@ -121,12 +117,12 @@ class ExportMediaURLsAdmin {
 
                                 <tr>
 
-                                    <th><label>By Author:</label></th>
+                                    <th><label><?php esc_html_e( 'By Author:', 'export-media-urls' ); ?></label></th>
 
                                     <td>
 
                                         <label><input type="radio" name="post-author" checked value="all"
-                                                      required="required"/> All</label><br/>
+                                                      required="required"/><?php echo esc_html_x( 'All', 'Media Author', 'export-media-urls' ); ?></label><br/>
                                         <?php
 
                                         if (!empty($user_ids) && !empty($user_names)) {
@@ -142,13 +138,12 @@ class ExportMediaURLsAdmin {
 
                                 <tr>
 
-                                    <th><label>Export Type:</label></th>
+                                    <th><label><?php esc_html_e( 'Export Type:', 'export-media-urls' ); ?></label></th>
 
                                     <td>
 
-                                        <label><input type="radio" name="export-type" value="csv" required="required"/> CSV File</label><br/>
-                                        <label><input type="radio" name="export-type" value="dashboard" required="required" checked />
-                                            Output here</label><br/>
+                                        <label><input type="radio" name="export-type" value="csv" required="required"/><?php esc_html_e( 'CSV File', 'export-media-urls' ); ?></label><br/>
+                                        <label><input type="radio" name="export-type" value="dashboard" required="required" checked /><?php esc_html_e( 'Output here', 'export-media-urls' ); ?></label><br/>
 
                                     </td>
 
@@ -160,7 +155,7 @@ class ExportMediaURLsAdmin {
 
                                     <td>
                                         <input type="submit" name="export" class="button button-primary"
-                                               value="Export Now"/>
+                                               value="<?php esc_attr_e( 'Export Now', 'export-media-urls' ); ?>"/>
                                     </td>
 
                                 </tr>
@@ -231,7 +226,7 @@ class ExportMediaURLsAdmin {
                 $this->create_output( $this->emu_generate_data($additional_data, $post_author, $export_type), $export_type );
 
             } else {
-                echo "Sorry, you did not select anything to export, Please <strong>Select Data </strong> you want to export, and then try again! :)";
+                echo __( 'Sorry, you did not select anything to export, Please <strong>Select Data </strong> you want to export, and then try again! :)', 'export-media-urls' );
                 exit;
             }
         }
@@ -277,7 +272,7 @@ class ExportMediaURLsAdmin {
         $query_urls = new WP_Query( $query_media_urls );
 
         if (!$query_urls->have_posts()) {
-            echo "no result found in that range, please <strong>reselect and try again</strong>!";
+            echo __( 'no result found in that range, please <strong>reselect and try again</strong>!', 'export-media-urls' );
             exit();
         }
 
@@ -390,11 +385,11 @@ class ExportMediaURLsAdmin {
                 $myfile = @fopen($file, "w") or die("Unable to create a file on your server!");
                 fprintf($myfile, "\xEF\xBB\xBF");
 
-                $headers[] = 'ID';
-                $headers[] = 'Title';
-                $headers[] = 'URLs';
-                $headers[] = 'Date Uploaded';
-                $headers[] = 'Media Type';
+                $headers[] = __( 'ID', 'export-media-urls' );
+                $headers[] = __( 'Title', 'export-media-urls' );
+                $headers[] = __( 'URLs', 'export-media-urls' );
+                $headers[] = __( 'Date Uploaded', 'export-media-urls' );
+                $headers[] = __( 'Media Type', 'export-media-urls' );
 
                 fputcsv($myfile, $headers);
 
@@ -412,7 +407,7 @@ class ExportMediaURLsAdmin {
 
                 fclose($myfile);
 
-                echo "<div class='updated' style='width: 97%'>Media Data Exported Successfully! <a href='" . $upload_directory['url'] . "/" . $csv_file_name . ".CSV' target='_blank'><strong>Click here</strong></a> to Download.</div>";
+                echo "<div class='updated' style='width: 97%'>" . esc_html__( 'Media Data Exported Successfully! ', 'export-media-urls' ) . "<a href='" . $upload_directory['url'] . "/" . $csv_file_name . ".CSV' target='_blank'><strong>" . esc_html__( 'Click here', 'export-media-urls' ) . "</strong></a>" . esc_html__( ' to Download.', 'export-media-urls' ) . "</div>";
                 break;
 
             default:
@@ -420,11 +415,11 @@ class ExportMediaURLsAdmin {
                 echo "<h1 align='center' style='padding: 10px 0;line-height: 1'><strong>Below is a list of Exported Media Data:</strong></h1>";
                 echo "<table class='form-table' id='outputData'>";
                 echo "<tr><th>#</th>";
-                echo isset($data['id']) ? "<th id='id'>Media ID</th>" : null;
-                echo isset($data['title']) ? "<th id='title'>Title</th>" : null;
-                echo isset($data['url']) ? "<th id='url'>URLs</th>" : null;
-                echo isset($data['date']) ? "<th id='date'>Date Uploaded</th>" : null;
-                echo isset($data['type']) ? "<th id='type'>Media Type</th>" : null;
+                echo isset($data['id']) ? "<th id='id'>" . esc_html__( 'Media ID', 'export-media-urls' ) . "</th>" : null;
+                echo isset($data['title']) ? "<th id='title'>" . esc_html__( 'Title', 'export-media-urls' ) . "</th>" : null;
+                echo isset($data['url']) ? "<th id='url'>" . esc_html__( 'URLs', 'export-media-urls' ) . "</th>" : null;
+                echo isset($data['date']) ? "<th id='date'>" . esc_html__( 'Date Uploaded', 'export-media-urls' ) . "</th>" : null;
+                echo isset($data['type']) ? "<th id='type'>" . esc_html__( 'Media Type', 'export-media-urls' ) . "</th>" : null;
 
                 echo "</tr>";
 
