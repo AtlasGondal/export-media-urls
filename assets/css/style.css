@@ -1,0 +1,193 @@
+.EMU-Wrapper {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    overflow: hidden
+}
+
+.EMU-Main-Container {
+    width: 75%;
+    margin-bottom: 0
+}
+
+.EMU-Side-Container {
+    width: 24%
+}
+
+.EMU-Side-Container .postbox:first-child {
+    margin-left: 20px;
+    padding-top: 15px
+}
+
+.eaucolumns {
+    float: left;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 5px
+}
+
+.EMU-Side-Container .postbox {
+    margin-bottom: 0;
+    float: none
+}
+
+.EMU-Side-Container .inside {
+    margin-bottom: 0
+}
+
+.EMU-Side-Container hr {
+    width: 70%;
+    margin: 10px auto
+}
+
+.EMU-Side-Container h3 {
+    cursor: default;
+    text-align: center;
+    font-size: 16px;
+    margin: 1px 0
+}
+
+.EMU-Side-Container li {
+    list-style: disclosure-closed;
+    margin-left: 25px
+}
+
+.EMU-Side-Container li a img {
+    display: inline-block;
+    vertical-align: middle
+}
+
+#EMUDevelopedBy {
+    text-align: center
+}
+
+#outputData {
+    border-collapse: collapse;
+    width: 98%;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+    table-layout: fixed
+}
+
+#outputData tr {
+    border: 1px solid #ddd;
+    padding: .35em
+}
+
+#outputData tr:nth-child(even) {
+    background-color: #fff
+}
+
+#outputData tr:hover {
+    background-color: #ddd
+}
+
+#outputData th {
+    background-color: #000;
+    color: #fff;
+    letter-spacing: .1em
+}
+
+#outputData td,
+#outputData th {
+    text-align: left;
+    padding: 8px;
+    word-wrap: break-word
+}
+
+#outputData th:first-child {
+    width: 4%
+}
+
+#outputData #id {
+    width: 6%
+}
+
+#outputData #title {
+    width: 20%
+}
+
+#outputData #url {
+    width: 50%
+}
+
+#outputData #date {
+    width: 12%
+}
+
+#outputData #type {
+    width: 8%
+}
+
+@media screen and (max-width:800px) {
+    .EMU-Main-Container {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto
+    }
+
+    .EMU-Side-Container {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 20px
+    }
+
+    .EMU-Side-Container .postbox:first-child {
+        margin-left: 0
+    }
+
+    #infoForm label {
+        padding-bottom: 32px
+    }
+
+    #outputData {
+        border: 0;
+        width: 86%;
+        margin-left: auto;
+        margin-right: auto
+    }
+
+    #outputData thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px
+    }
+
+    #outputData tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em
+    }
+
+    #outputData th {
+        width: 95% !important
+    }
+
+    #outputData td,
+    #outputData th {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em
+    }
+
+    #outputData td::before {
+        float: left;
+        font-weight: 700;
+        text-transform: uppercase
+    }
+
+    #outputData td:last-child {
+        border-bottom: 0
+    }
+}
