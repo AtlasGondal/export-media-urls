@@ -5,11 +5,17 @@ extract media URLs of wordpress website
 
 ## Description
 
-This plugin allows you to extract all URLs of your media, along with title, date, and type. It supports writing output in CSV file, or you can view URLs within the dashboard. It can be very useful during migration, seo analysis, and security audit. You can **export Media’s**:
+The ultimate solution for seamlessly managing and extracting information from your media library. This user-friendly plugin simplifies the task of gathering essential details of media like title, date, caption, alt-text, description and type of media file. It facilitates the generation of CSV output or allows you to conveniently view URLs directly within the dashboard, proving invaluable for tasks such as migration, SEO analysis, and security audits. 
+
+You can **export Media’s**:
 
 - IDs
-- Titles
-- URLs
+- Title
+- File Name
+- Caption
+- Alt Text
+- Description
+- URL
 - Date Uploaded
 - And its Type
 
