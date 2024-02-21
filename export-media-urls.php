@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Plugin Name: Export Media URLs
  * Plugin URI:  https://wordpress.org/plugins/export-media-urls/
  * Description: This plugin allows you to extract all URLs of your media, along with title, date, and type. It supports writing output in CSV file, or you can view URLs within the dashboard. It can be very useful during migration, seo analysis and security audit.
- * Version:     1.0
+ * Version:     2.1
  * Author:      Atlas Gondal
  * Author URI:  https://AtlasGondal.com/
  * License:     GPL2
@@ -26,33 +27,34 @@
 
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
     die;
 }
 
-define( 'Export_Media_URLs__FILE__', __FILE__ );
+define('Export_Media_URLs__FILE__', __FILE__);
 
-add_action( 'plugins_loaded', 'export_media_urls_load_textdomain' );
+add_action('plugins_loaded', 'export_media_urls_load_textdomain');
 
-function activate_export_media_urls() {
-    if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
-        deactivate_plugins( plugin_basename( Export_Media_URLs__FILE__ ) );
-        $plugin_data = get_plugin_data( Export_Media_URLs__FILE__ );
+function activate_export_media_urls()
+{
+    if (version_compare(PHP_VERSION, '5.4', '<')) {
+        deactivate_plugins(plugin_basename(Export_Media_URLs__FILE__));
+        $plugin_data = get_plugin_data(Export_Media_URLs__FILE__);
         $plugin_version = $plugin_data['Version'];
         $plugin_name = $plugin_data['Name'];
-        wp_die( '<h1>' . __('Could not activate plugin: PHP version error', 'export-media-urls' ) . '</h1><h2>' . __('PLUGIN: ', 'export-media-urls' ) . '<i>' . $plugin_name . ' ' . $plugin_version . '</i></h2><p><strong>' . __('You are using PHP version', 'export-media-urls' ) . ' ' . PHP_VERSION . '</strong>. ' . __( 'This plugin has been tested with PHP versions 5.4 and greater.', 'export-media-urls' ) . '</p><p>' . __('WordPress itself recommends using PHP version 7.3 or greater', 'export-media-urls' ) . ': <a href="https://wordpress.org/about/requirements/" target="_blank">' . __('Official WordPress requirements', 'export-media-urls' ) . '</a>' . '. ' . __('Please upgrade your PHP version or contact your Server administrator.', 'export-media-urls' ) . '</p>', __('Could not activate plugin: PHP version error', 'export-media-urls' ), array( 'back_link' => true ) );
-
+        wp_die('<h1>' . __('Could not activate plugin: PHP version error') . '</h1><h2>PLUGIN: <i>' . $plugin_name . ' ' . $plugin_version . '</i></h2><p><strong>' . __('You are using PHP version') . ' ' . PHP_VERSION . '</strong>. ' . __('This plugin has been tested with PHP versions 5.4 and greater.') . '</p><p>' . __('WordPress itself recommends using PHP version 7.3 or greater') . ': <a href="https://wordpress.org/about/requirements/" target="_blank">' . __('Official WordPress requirements') . '</a>' . '. ' . __('Please upgrade your PHP version or contact your Server administrator.') . '</p>', __('Could not activate plugin: PHP version error'), array('back_link' => true));
     }
-        set_transient( 'export_media_urls_activation_redirect', true, 30 );
+    set_transient('export_media_urls_activation_redirect', true, 30);
 }
 
-register_activation_hook( __FILE__, 'activate_export_media_urls' );
+register_activation_hook(__FILE__, 'activate_export_media_urls');
 
 
-function export_media_urls_load_textdomain() {
-    load_plugin_textdomain( 'export-media-urls' );
+function export_media_urls_load_textdomain()
+{
+    load_plugin_textdomain('export-media-urls');
 }
 
-if ( ! class_exists( 'MediaFromZipAdmin' ) ) {
-    require_once dirname( Export_Media_URLs__FILE__ ) . '/lib/class-export-media-urls-admin.php';
+if (!class_exists('ExportMediaURLsAdmin')) {
+    require_once dirname(Export_Media_URLs__FILE__) . '/classes/class-export-media-urls-admin.php';
 }
