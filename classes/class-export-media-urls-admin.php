@@ -26,10 +26,10 @@ $export_media_urls_admin = new ExportMediaURLsAdmin();
 class ExportMediaURLsAdmin
 {
 
+    public const PLUGIN_TEXT_DOMAIN = 'export-media-urls';
+
     public function __construct()
     {
-
-
         add_action('admin_init', array($this, 'redirect_on_activation'));
         add_action('admin_menu', array($this, 'add_plugin_page'));
         add_action('admin_footer_text', array($this, 'add_plugin_text_in_footer'));
@@ -74,7 +74,7 @@ class ExportMediaURLsAdmin
     public function enqueue_scripts($hook_suffix)
     {
 
-        if($hook_suffix !== Constants::PLUGIN_HOOK_SUFFIX) {
+        if ($hook_suffix !== Constants::PLUGIN_HOOK_SUFFIX) {
             return;
         }
 
@@ -89,7 +89,7 @@ class ExportMediaURLsAdmin
             wp_enqueue_script('select2');
             wp_enqueue_style('select2css');
         }
-        
+
         wp_enqueue_script('emu_script', plugin_dir_url(__FILE__) . '../assets/js/script.js', array('jquery', 'select2'), '2.1', true);
     }
 
@@ -108,6 +108,15 @@ class ExportMediaURLsAdmin
             $user_ids[] = $user->data->ID;
             $user_names[] = $user->data->user_login;
         }
+
+        $form_submitted = isset($_POST['form_submitted']) ? true : false;
+        $selected_additional_data = isset($_POST['additional-data']) ? $_POST['additional-data'] : array('url');
+        $selected_author = isset($_POST['post-author']) ? $_POST['post-author'] : 'all';
+        $selected_date_range = isset($_POST['date-range']) ? $_POST['date-range'] : 'all';
+        $selected_start_date = isset($_POST['start-date']) ? $_POST['start-date'] : '';
+        $selected_end_date = isset($_POST['end-date']) ? $_POST['end-date'] : '';
+        $selected_export_type = isset($_POST['export-type']) ? $_POST['export-type'] : 'dashboard';
+
 
 ?>
 
@@ -129,23 +138,14 @@ class ExportMediaURLsAdmin
 
                                     <td>
 
-                                        <label><input type="checkbox" name="additional-data[]" value="id" />
-                                            ID</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="title" />
-                                            Title</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="file_name" />
-                                            File Name</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="caption" />
-                                            Caption</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="alt" />
-                                            Alt Text</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="description" />
-                                            Description</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="url" checked />
-                                            URL</label><br />
-                                        <label><input type="checkbox" name="additional-data[]" value="date" /> Date Uploaded</label><br />
-
-                                        <label><input type="checkbox" name="additional-data[]" value="type" /> Type</label><br />
+                                        <?php
+                                        
+                                            foreach ($this->export_fields() as $key => $name) {
+                                                $checked = in_array($key, $selected_additional_data) ? 'checked' : '';
+                                                echo "<label><input type='checkbox' name='additional-data[]' value='$key' $checked /> $name</label><br />";
+                                            }
+                                        
+                                        ?>
 
                                     </td>
 
@@ -155,11 +155,12 @@ class ExportMediaURLsAdmin
                                     <th><label for="post-author">By Author:</label></th>
                                     <td>
                                         <select id="post-author" class="select2" name="post-author" required="required" style="width: 40%;">
-                                            <option value="all" selected>All</option>
+                                            <option value="all" <?php echo $selected_author == 'all' ? 'selected' : '' ?>>All</option>
                                             <?php
                                             if (!empty($user_ids) && !empty($user_names)) {
                                                 for ($i = 0; $i < count($user_ids); $i++) {
-                                                    echo '<option value="' . esc_attr($user_ids[$i]) . '">' . esc_html($user_names[$i]) . '</option>';
+                                                    $is_author_selected = $selected_author == $user_ids[$i] ? 'selected' : '';
+                                                    echo '<option value="' . esc_attr($user_ids[$i]) . '" ' . $is_author_selected . '>' . esc_html($user_names[$i]) . '</option>';
                                                 }
                                             }
                                             ?>
@@ -167,6 +168,20 @@ class ExportMediaURLsAdmin
                                     </td>
                                 </tr>
 
+                                <tr>
+                                    <th><label for="date-range">Date Range:</label></th>
+
+                                    <td>
+                                        <label><input type="radio" name="date-range" value="all" <?php echo $selected_date_range == 'all' ? 'checked' : ''; ?> required="required" onclick="hideRangeFields()" /> <?php echo esc_html__('All', self::PLUGIN_TEXT_DOMAIN); ?></label><br />
+                                        <label><input type="radio" name="date-range" value="range" <?php echo $selected_date_range == 'range' ? 'checked' : ''; ?> required="required" onclick="showRangeFields()" /> <?php echo esc_html__('Between Dates', self::PLUGIN_TEXT_DOMAIN); ?></label><br />
+
+                                        <div id="dateRange" style="display: <?php echo $selected_date_range == 'range' ? 'block' : 'none'; ?>">
+                                            <?php echo esc_html__('From:', self::PLUGIN_TEXT_DOMAIN); ?> <input type="date" name="start-date" value="<?php echo $selected_start_date; ?>" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <?php echo esc_html__('To:', self::PLUGIN_TEXT_DOMAIN); ?> <input type="date" name="end-date" value="<?php echo $selected_end_date; ?>" />
+                                        </div>
+                                    </td>
+
+                                </tr>
 
                                 <tr>
 
@@ -174,9 +189,8 @@ class ExportMediaURLsAdmin
 
                                     <td>
 
-                                        <label><input type="radio" name="export-type" value="csv" required="required" /> CSV File</label><br />
-                                        <label><input type="radio" name="export-type" value="dashboard" required="required" checked />
-                                            Output here</label><br />
+                                        <label><input type="radio" name="export-type" value="csv" <?php echo $selected_export_type == 'csv' ? 'checked' : ''; ?> required="required" /> CSV File</label><br />
+                                        <label><input type="radio" name="export-type" value="dashboard" <?php echo $selected_export_type == 'dashboard' ? 'checked' : ''; ?> required="required" /> Output here</label><br />
 
                                     </td>
 
@@ -188,6 +202,7 @@ class ExportMediaURLsAdmin
 
                                     <td>
                                         <?php wp_nonce_field('export_media_urls'); ?>
+                                        <input type="hidden" name="form_submitted" value="1">
                                         <input type="submit" name="export" class="button button-primary" value="Export Now" />
                                     </td>
 
@@ -253,12 +268,42 @@ class ExportMediaURLsAdmin
                 }
 
                 if (!empty($_POST['additional-data']) && !empty($_POST['post-author']) && !empty($_POST['export-type'])) {
-                    $additional_data = $_POST['additional-data'];
-                    $post_author = $_POST['post-author'];
+                    $additional_data = array_map('sanitize_text_field', $_POST['additional-data']);
+                    $post_author = sanitize_text_field($_POST['post-author']);
+                    $date_range = sanitize_text_field($_POST['date-range']);
+
+                    if ($date_range == 'range') {
+                        $start_date = sanitize_text_field($_POST['start-date']);
+                        $end_date = sanitize_text_field($_POST['end-date']);
+
+                        if (empty($start_date) || empty($end_date)) {
+                            echo "<div class='notice notice-error' style='width: 93%'>" . __('Please select both dates!', Constants::PLUGIN_TEXT_DOMAIN) . "</div>";
+                            exit;
+                        }
+
+                        $start_date = strtotime($start_date);
+                        $end_date = strtotime($end_date);
+
+                        if ($start_date > $end_date) {
+                            echo "<div class='notice notice-error' style='width: 93%'>" . __('Start date cannot be greater than end date!', Constants::PLUGIN_TEXT_DOMAIN) . "</div>";
+                            exit;
+                        }
+
+                        $date_range = array(
+                            'start_date' => date('Y-m-d', $start_date),
+                            'end_date' => date('Y-m-d', $end_date),
+                        );
+                    } else {
+
+                        $date_range = array(
+                            'start_date' => '',
+                            'end_date' => '',
+                        );
+                    }
 
                     $export_type = $_POST['export-type'];
 
-                    $this->create_output($this->emu_generate_data($additional_data, $post_author, $export_type), $export_type);
+                    $this->create_output($this->emu_generate_data($additional_data, $post_author, $date_range, $export_type), $export_type);
                 } else {
                     echo __("Sorry, you did not select anything to export, Please <strong>Select Data </strong> you want to export, and then try again! :)", Constants::PLUGIN_TEXT_DOMAIN);
                     exit;
@@ -305,11 +350,15 @@ class ExportMediaURLsAdmin
         return false;
     }
 
-    private function emu_generate_data($additional_data, $post_author, $export_type)
+    private function emu_generate_data($additional_data, $post_author, $date_range, $export_type)
     {
 
         $data = array();
         $counter = 0;
+
+        if(is_array($date_range)){
+
+        }
 
         $line_break = $export_type == 'dashboard' ? "<br/>" : "";
 
@@ -318,6 +367,13 @@ class ExportMediaURLsAdmin
             'author'            => $post_author != 'all' ? $post_author : "",
             'post_status'       => 'inherit',
             'posts_per_page'    => -1,
+            'date_query'        => array(
+                array(
+                    'after'     => $date_range['start_date'],
+                    'before'    => $date_range['end_date'],
+                    'inclusive' => true,
+                )
+            ),
         );
 
         $query_urls = new \WP_Query($query_media_urls);
@@ -348,6 +404,10 @@ class ExportMediaURLsAdmin
 
                         case 'file_name':
                             $data[$data_type][$counter] .= wp_basename(get_attached_file(get_the_ID())) . $line_break;
+                            break;
+
+                        case 'file_size':
+                            $data[$data_type][$counter] .= size_format(filesize(get_attached_file(get_the_ID()))). $line_break;
                             break;
 
                         case 'caption':
@@ -390,21 +450,26 @@ class ExportMediaURLsAdmin
         return $data;
     }
 
+    private function export_fields() {
+     return array(
+        'id'          => 'ID',
+        'title'       => 'Title',
+        'file_name'   => 'File Name',
+        'file_size'   => 'File Size',
+        'caption'     => 'Caption',
+        'alt'         => 'Alt Text',
+        'description' => 'Description',
+        'url'         => 'URL',
+        'date'        => 'Date Uploaded',
+        'type'        => 'Type',
+     );
+    }
+
     private function get_data_headers($data)
     {
         $filtered_headers = [];
 
-        $headers = [
-            'id'          => 'ID',
-            'title'       => 'Title',
-            'file_name'   => 'File Name',
-            'caption'     => 'Caption',
-            'alt'         => 'Alt Text',
-            'description' => 'Description',
-            'url'         => 'URLs',
-            'date'        => 'Date Uploaded',
-            'type'        => 'Type',
-        ];
+        $headers = $this->export_fields();
 
         foreach ($headers as $key => $name) {
             if (isset($data[$key])) {
@@ -496,7 +561,7 @@ class ExportMediaURLsAdmin
                             if ($key === 'description') {
                                 $cellValue = wp_kses_post($cellValue);
                             } elseif ($key === 'url') {
-                                $cellValue = esc_url($cellValue);
+                                $cellValue = esc_url(strip_tags($cellValue));
                             } else {
                                 $cellValue = sanitize_text_field($cellValue);
                             }

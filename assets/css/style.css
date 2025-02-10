@@ -97,7 +97,8 @@
 #outputData th {
     text-align: left;
     padding: 8px;
-    word-wrap: break-word
+    word-wrap: break-word;
+    width: max-content;
 }
 
 #outputData th:first-child {
