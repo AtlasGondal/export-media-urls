@@ -12,6 +12,7 @@ You can **export Media’s**:
 - IDs
 - Title
 - File Name
+- File Size
 - Caption
 - Alt Text
 - Description
@@ -19,7 +20,7 @@ You can **export Media’s**:
 - Date Uploaded
 - And its Type
 
-The data can be filtered by Author, before extraction.
+The data can be filtered by Author, or between selected date range before extraction.
 
 ## When we need this plugin?
 - To check Media URLs of your website
